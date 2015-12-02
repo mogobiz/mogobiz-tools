@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2015 Mogobiz SARL. All rights reserved.
+ */
+
 package com.mogobiz.tools
 
 import com.mortennobel.imagescaling.AdvancedResizeOp
@@ -57,7 +61,7 @@ final class ImageTools {
 
     def static Collection<File> resizeImage(File file){
         def files = []
-        if(file){
+        if(file?.exists()){
             final mimeType = detectMimeType(file)
             if(mimeType.startsWith("image/")){
                 final format = toFormat(mimeType)
@@ -71,7 +75,7 @@ final class ImageTools {
 
     def static File resizeImage(File file, String format = toFormat(detectMimeType(file)), int width, int height){
         File out = null
-        if(file && format && width > 0 && height > 0){
+        if(file?.exists() && format && width > 0 && height > 0){
             out = new File("${file.absolutePath}.${width}x$height.$format")
             if(!out.exists()){
                 BufferedImage src = ImageIO.read(file)
@@ -100,20 +104,25 @@ final class ImageTools {
         out
     }
     public static File getFile(File resFile, ImageSize size, boolean create) {
-        final format = toFormat(detectMimeType(resFile))
-        File file = new File("${resFile.absolutePath}.${size.width()}x${size.height()}.$format");
-        if (!file.exists() && create) {
-            resizeImage(resFile)
+        File file = null
+        if(resFile?.exists()){
+            final format = toFormat(detectMimeType(resFile))
+            file = new File("${resFile.absolutePath}.${size.width()}x${size.height()}.$format");
+            if (!file.exists() && create) {
+                resizeImage(resFile)
+            }
         }
         return file
     }
 
     public static void deleteAll(File resFile) {
-        final format = toFormat(detectMimeType(resFile))
-        resFile.delete()
-        for (size in ImageSize.values()) {
-            File file = new File("${resFile.absolutePath}.${size.width()}x${size.height()}.$format")
-            file.delete()
+        if(resFile?.exists()){
+            final format = toFormat(detectMimeType(resFile))
+            resFile.delete()
+            for (size in ImageSize.values()) {
+                File file = new File("${resFile.absolutePath}.${size.width()}x${size.height()}.$format")
+                file.delete()
+            }
         }
     }
 

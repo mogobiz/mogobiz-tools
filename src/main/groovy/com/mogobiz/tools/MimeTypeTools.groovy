@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2015 Mogobiz SARL. All rights reserved.
+ */
+
 package com.mogobiz.tools
 
 import groovy.util.logging.Log4j
@@ -21,7 +25,7 @@ final class MimeTypeTools {
 
     static String detectMimeType(File file, String filenameWithExtension = file?.name) {
         String type = null
-        if(file){
+        if(file?.exists()){
             try{
                 Tika tika = new Tika();
                 type = tika.detect(file)

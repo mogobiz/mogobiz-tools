@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2015 Mogobiz SARL. All rights reserved.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mogobiz-grails</artifactId>
         <groupId>com.mogobiz</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.4.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -140,7 +144,7 @@
     </build>
 
     <properties>
-        <compiler.source>1.7</compiler.source>
+        <compiler.source>1.6</compiler.source>
         <compiler.target>${compiler.source}</compiler.target>
         <groovy.major.version>2.1</groovy.major.version>
         <groovy.version>${groovy.major.version}.9</groovy.version>
