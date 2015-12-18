@@ -10,7 +10,6 @@ import rx.subscriptions.Subscriptions
 
 /**
  *
- * Created by stephane.manciot@ebiznext.com on 25/01/2015.
  */
 @Log4j
 final class Reader {

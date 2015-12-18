@@ -11,7 +11,6 @@ import org.junit.Test
 
 /**
  *
- * Created by smanciot on 11/04/15.
  */
 class FileToolsTest extends GroovyTestCase{
 

@@ -14,7 +14,6 @@ import static ExecuteShellTools.*
 
 /**
  *
- * Created by stephane.manciot@ebiznext.com on 25/01/15.
  */
 @Log4j
 final class MimeTypeTools {

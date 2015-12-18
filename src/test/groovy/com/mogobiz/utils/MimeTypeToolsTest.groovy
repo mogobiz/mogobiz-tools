@@ -9,7 +9,6 @@ import org.junit.Test
 import static com.mogobiz.tools.MimeTypeTools.*
 /**
  *
- * Created by stephane.manciot@ebiznext.com on 25/01/15.
  */
 class MimeTypeToolsTest extends GroovyTestCase {
 

@@ -16,7 +16,6 @@ import java.nio.file.Paths
 
 /**
  *
- * Created by smanciot on 11/04/15.
  */
 @Log4j
 class FileTools {
