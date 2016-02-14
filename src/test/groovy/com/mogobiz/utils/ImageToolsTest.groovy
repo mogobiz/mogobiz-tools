@@ -24,7 +24,7 @@ class ImageToolsTest extends GroovyTestCase {
     void testEncodeBase64(){
         File logo = new File(ImageToolsTest.class.getResource("logo.png").path)
         assertNotNull(logo)
-        final encoded = encodeBase64(logo)
+        final encoded = encodeImageBase64(logo)
         assertNotNull(encoded)
         log.info(encoded)
     }
@@ -35,7 +35,7 @@ class ImageToolsTest extends GroovyTestCase {
         assertNotNull(logo)
         def fis = new FileInputStream(logo)
         fis.close()
-        final encoded = encodeBase64(logo)
+        final encoded = encodeImageBase64(logo)
         assertNotNull(encoded)
 
         byte[] bytes = decodeBase64(encoded)
@@ -53,7 +53,7 @@ class ImageToolsTest extends GroovyTestCase {
         is.close()
         os.close()
 
-        assertEquals(encoded, encodeBase64(decoded))
+        assertEquals(encoded, encodeImageBase64(decoded))
     }
 
     void testResizeImage(){

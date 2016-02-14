@@ -5,7 +5,7 @@
 package com.mogobiz.utils
 
 import static com.mogobiz.tools.Base64Tools.*
-import static com.mogobiz.tools.ImageTools.encodeBase64
+import static com.mogobiz.tools.ImageTools.encodeImageBase64
 import static com.mogobiz.tools.HashTools.*
 
 /**
@@ -21,7 +21,7 @@ class HashToolsTest extends GroovyTestCase {
     void setUp() {
         File logo = new File(ImageToolsTest.class.getResource("logo.png").path)
         assertNotNull(logo)
-        encoded = encodeBase64(logo, true)
+        encoded = encodeImageBase64(logo, true)
         copy = new File(tmp, logo.getName())
         FileOutputStream fos = new FileOutputStream(copy)
         fos.write(decodeBase64(encoded))

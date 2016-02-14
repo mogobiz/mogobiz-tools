@@ -22,7 +22,7 @@ final class ImageTools {
 
     private ImageTools(){}
 
-    def static String encodeBase64(File f, boolean encodeAsURI = false){
+    def static String encodeImageBase64(File f, boolean encodeAsURI = false){
         def encoded = null
         if(f?.exists()){
             ByteArrayOutputStream bos = new ByteArrayOutputStream()

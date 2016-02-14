@@ -20,7 +20,7 @@ import java.nio.file.Paths
 @Log4j
 class FileTools {
 
-    def static String encodeBase64(File file){
+    def static String encodeFileBase64(File file){
         def encoded = null
         if(file?.exists()){
             FileChannel inChannel = Files.newByteChannel(Paths.get(file.toURI())) as FileChannel

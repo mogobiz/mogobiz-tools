@@ -17,7 +17,7 @@ class FileToolsTest extends GroovyTestCase{
     @Test
     void testEncodeBase64(){
         File logo = new File(FileToolsTest.class.getResource("document.pdf").path)
-        def encoded = FileTools.encodeBase64(logo)
+        def encoded = FileTools.encodeFileBase64(logo)
         assertNotNull(encoded)
         byte[] bytes = Base64.decodeBase64(encoded)
         File out = new File("/tmp/test.pdf")
