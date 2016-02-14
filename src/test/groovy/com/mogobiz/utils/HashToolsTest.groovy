@@ -19,7 +19,7 @@ class HashToolsTest extends GroovyTestCase {
     File copy
 
     void setUp() {
-        File logo = new File(ImageToolsTest.class.getResource("logoPDF.png").path)
+        File logo = new File(ImageToolsTest.class.getResource("logo.png").path)
         assertNotNull(logo)
         encoded = encodeBase64(logo, true)
         copy = new File(tmp, logo.getName())
