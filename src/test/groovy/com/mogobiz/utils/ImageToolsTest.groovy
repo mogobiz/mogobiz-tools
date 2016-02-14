@@ -7,6 +7,7 @@ package com.mogobiz.utils
 import org.junit.Test
 
 import static com.mogobiz.tools.ImageTools.*
+import static com.mogobiz.tools.Base64Tools.*
 /**
  *
  */

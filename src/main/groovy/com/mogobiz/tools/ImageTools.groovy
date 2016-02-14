@@ -7,13 +7,11 @@ package com.mogobiz.tools
 import com.mortennobel.imagescaling.AdvancedResizeOp
 import com.mortennobel.imagescaling.ResampleOp
 import groovy.util.logging.Log4j
-import org.apache.commons.codec.binary.Base64
 
 import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
+import static Base64Tools.encodeBase64
 import static MimeTypeTools.*
 
 /**
@@ -21,8 +19,6 @@ import static MimeTypeTools.*
  */
 @Log4j
 final class ImageTools {
-
-    def static final Pattern DATA_ENCODED = ~/data:(.*);base64,(.*)/
 
     private ImageTools(){}
 
@@ -33,29 +29,13 @@ final class ImageTools {
             try {
                 final mimeType = detectMimeType(f)
                 ImageIO.write(ImageIO.read(f), toFormat(mimeType), bos)
-                encoded = (encodeAsURI ? "data:$mimeType;base64," : "") + Base64.encodeBase64String(bos.toByteArray())
+                encoded = encodeBase64(bos.toByteArray(), encodeAsURI ? mimeType:null)
                 bos.close()
             } catch (IOException e) {
                 log.error(e.message, e)
             }
         }
         return encoded
-    }
-
-    def static byte[] decodeBase64(String encoded, boolean encodedAsURI = false){
-        def ret = null
-        if(encodedAsURI){
-            Matcher matcher = DATA_ENCODED.matcher(encoded)
-            if (matcher.find() && matcher.groupCount() > 1){
-                final type = matcher.group(1)
-                log.debug("extract mime type $type from $encoded")
-                ret = Base64.decodeBase64(matcher.group(2))
-            }
-        }
-        else{
-            ret = Base64.decodeBase64(encoded)
-        }
-        ret
     }
 
     def static Collection<File> resizeImage(File file){
