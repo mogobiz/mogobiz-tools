@@ -61,6 +61,8 @@ final class ImageTools {
                 int originalHeight = src.height
                 int topMargin = 0
                 int leftMargin = 0
+                int imgWidth = width
+                int imgHeight = height
                 if(width == originalWidth && height == originalHeight){
                     InputStream is = new FileInputStream(file)
                     OutputStream os = new FileOutputStream(out)
@@ -74,16 +76,16 @@ final class ImageTools {
                 }
                 else {
                     if (originalWidth > originalHeight) {
-                        height = originalHeight * width /originalWidth
-                        topMargin = (width - height)/2
+                        imgHeight = originalHeight * width /originalWidth
+                        topMargin = (imgWidth - imgHeight)/2
                     }
                     else {
-                        width = originalWidth * height /originalHeight
-                        leftMargin = (height - width)/2
+                        imgWidth = originalWidth * height /originalHeight
+                        leftMargin = (imgHeight - imgWidth)/2
                     }
                     log.info("resize image ${originalWidth}x$originalHeight to ${out.absolutePath}")
-                    BufferedImage dest = Scalr.resize(src, Scalr.Method.ULTRA_QUALITY, width, height);
-                    BufferedImage dest2 = Scalr.move(dest, leftMargin, topMargin, Color.WHITE);
+                    BufferedImage dest = Scalr.resize(src, Scalr.Method.ULTRA_QUALITY, imgWidth, imgHeight);
+                    BufferedImage dest2 = Scalr.move(dest, leftMargin, topMargin, width, height, Color.WHITE);
                     ImageIO.write(dest2, format, out)
                 }
             }
