@@ -4,8 +4,6 @@
 
 package com.mogobiz.tools
 
-import com.mortennobel.imagescaling.AdvancedResizeOp
-import com.mortennobel.imagescaling.ResampleOp
 import groovy.util.logging.Log4j
 
 import javax.imageio.ImageIO
