@@ -5,7 +5,7 @@
 package com.mogobiz.tools;
 
 public enum ImageSize {
-	ICON(32,32), SMALL(240,240)
+	ICON(32,32), SMALL(240,240) // Must be a square for resizing to work correctly in ImageTools.
 	
 	public int height() {
 		return this.height

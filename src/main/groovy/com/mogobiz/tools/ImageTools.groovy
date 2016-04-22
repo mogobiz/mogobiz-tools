@@ -71,7 +71,13 @@ final class ImageTools {
                     is.close()
                     os.close()
                 }
-                else{
+                else {
+                    if (originalWidth > originalHeight) {
+                        height = originalHeight * width /originalWidth
+                    }
+                    else {
+                        width = originalWidth * height /originalHeight
+                    }
                     log.info("resize image ${originalWidth}x$originalHeight to ${out.absolutePath}")
                     ResampleOp resampleOp = new ResampleOp (width, height)
                     resampleOp.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.VerySharp)
