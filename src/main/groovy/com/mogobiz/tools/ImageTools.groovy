@@ -9,6 +9,7 @@ import com.mortennobel.imagescaling.ResampleOp
 import groovy.util.logging.Log4j
 
 import javax.imageio.ImageIO
+import java.awt.Color
 import java.awt.image.BufferedImage
 
 import static Base64Tools.encodeBase64
@@ -60,6 +61,8 @@ final class ImageTools {
                 BufferedImage src = ImageIO.read(file)
                 int originalWidth = src.width
                 int originalHeight = src.height
+                int topMargin = 0
+                int leftMargin = 0
                 if(width == originalWidth && height == originalHeight){
                     InputStream is = new FileInputStream(file)
                     OutputStream os = new FileOutputStream(out)
@@ -74,15 +77,16 @@ final class ImageTools {
                 else {
                     if (originalWidth > originalHeight) {
                         height = originalHeight * width /originalWidth
+                        topMargin = (width - height)/2
                     }
                     else {
                         width = originalWidth * height /originalHeight
+                        leftMargin = (height - width)/2
                     }
                     log.info("resize image ${originalWidth}x$originalHeight to ${out.absolutePath}")
-                    ResampleOp resampleOp = new ResampleOp (width, height)
-                    resampleOp.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.VerySharp)
-                    BufferedImage dest = resampleOp.filter(src, null)
-                    ImageIO.write(dest, format, out)
+                    BufferedImage dest = Scalr.resize(src, Scalr.Method.ULTRA_QUALITY, width, height);
+                    BufferedImage dest2 = Scalr.move(dest, leftMargin, topMargin, Color.WHITE);
+                    ImageIO.write(dest2, format, out)
                 }
             }
         }
