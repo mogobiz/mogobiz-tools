@@ -10,6 +10,7 @@
         <artifactId>mogobiz-grails</artifactId>
         <groupId>com.mogobiz</groupId>
         <version>1.0.0</version>
+        <relativePath>../mogobiz-pim/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
