@@ -30,11 +30,20 @@
             <version>1.7</version>
         </dependency>
 
-        <!-- rxjava-groovy -->
+        <!-- rxjava -->
         <dependency>
-            <groupId>com.netflix.rxjava</groupId>
-            <artifactId>rxjava-groovy</artifactId>
-            <version>0.20.7</version>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>1.0.15</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- rxgroovy -->
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxgroovy</artifactId>
+            <version>1.0.3</version>
+            <scope>compile</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.groovy</groupId>
@@ -42,6 +51,20 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>com.netflix.rxjava</groupId>
+            <artifactId>rxjava-groovy</artifactId>
+            <version>0.20.7</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-all</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        //-->
 
         <!-- zxing -->
         <dependency>
