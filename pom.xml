@@ -96,6 +96,18 @@
             <version>${slf4j.version}</version>
         </dependency>
 
+        <!-- scala -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scalap</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -167,6 +179,8 @@
         <groovy.major.version>2.1</groovy.major.version>
         <groovy.version>${groovy.major.version}.9</groovy.version>
         <slf4j.version>1.7.5</slf4j.version>
+        <scala.major.version>2.11</scala.major.version>
+        <scala.version>${scala.major.version}.2</scala.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
         <sonar.language>grvy</sonar.language>
