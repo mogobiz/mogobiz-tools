@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2015 Mogobiz SARL. All rights reserved.
+ */
 package com.mogobiz.tools
 
 import scala.Option
@@ -7,7 +10,6 @@ import static scala.collection.JavaConverters.collectionAsScalaIterableConverter
 
 /**
  *
- * Created by smanciot on 17/06/16.
  */
 final class ScalaTools {
 

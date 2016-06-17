@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2015 Mogobiz SARL. All rights reserved.
+ */
 package com.mogobiz.utils
 
 import scala.Option
@@ -6,7 +9,6 @@ import static com.mogobiz.tools.ScalaTools.*
 
 /**
  *
- * Created by smanciot on 17/06/16.
  */
 class ScalaToolsTest  extends GroovyTestCase{
 
