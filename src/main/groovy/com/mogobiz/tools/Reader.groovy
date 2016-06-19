@@ -5,6 +5,7 @@
 package com.mogobiz.tools
 
 import groovy.util.logging.Log4j
+import rx.Subscriber
 import rx.Subscription
 import rx.subscriptions.Subscriptions
 
@@ -40,27 +41,31 @@ final class Reader {
             String separator = ';',
             Closure<String> keysTransformation = identity,
             Closure<String> tokensTransformation = identity){
-        rx.Observable.create(new rx.Observable.OnSubscribeFunc<Map>() {
+        rx.Observable.create(new rx.Observable.OnSubscribe<Map>() {
             @Override
-            Subscription onSubscribe(rx.Observer observer) {
+            void call(Subscriber<? super Map> subscriber) {
+                def subscription = new InnerSubscription()
+                subscriber.add(subscription)
                 try{
                     String[] keys = null
+                    subscriber.onStart()
                     text.eachLine {String line, int count ->
                         if(count == 0){
                             keys = keysTransformation(line).split(separator)
                         }
                         else if(line.trim().length() > 0){
-                            observer.onNext(convertLineToMap(keys, line, separator, tokensTransformation))
+                            if(!subscription.isUnsubscribed()) {
+                                subscriber.onNext(convertLineToMap(keys, line, separator, tokensTransformation))
+                            }
                         }
                     }
                 }
                 catch(Throwable th){
-                    observer.onError(th)
+                    subscriber.onError(th)
                 }
 
-                observer.onCompleted()
+                subscriber.onCompleted()
 
-                return Subscriptions.empty()
             }
         })
     }
@@ -70,28 +75,30 @@ final class Reader {
     }
 
     static rx.Observable<CsvLine> parseCsvFile(final File file, final String charset = 'UTF-8', final String separator = ';', Closure<String> transformation = identity){
-        rx.Observable.create(new rx.Observable.OnSubscribeFunc<CsvLine>() {
+        rx.Observable.create(new rx.Observable.OnSubscribe<CsvLine>() {
             @Override
-            Subscription onSubscribe(rx.Observer observer) {
+            void call(Subscriber<? super CsvLine> subscriber) {
                 try{
+                    def subscription = new InnerSubscription()
+                    subscriber.add(subscription)
+                    subscriber.onStart()
                     file.eachLine(charset, {String line, lineNumber ->
                         if(line.trim().length() > 0){
-                            observer.onNext(
-                                    new CsvLine(
-                                            fields: transformation(line).split(separator),
-                                            number: lineNumber
-                                    )
-                            )
+                            if(!subscription.isUnsubscribed()){
+                                subscriber.onNext(
+                                        new CsvLine(
+                                                fields: transformation(line).split(separator),
+                                                number: lineNumber
+                                        )
+                                )
+                            }
                         }
                     })
                 }
                 catch(Throwable th){
-                    observer.onError(th)
+                    subscriber.onError(th)
                 }
-
-                observer.onCompleted()
-
-                return Subscriptions.empty()
+                subscriber.onCompleted()
             }
         })
     }
@@ -100,4 +107,17 @@ final class Reader {
 class CsvLine{
     String[] fields
     int number
+}
+
+class InnerSubscription implements Subscription{
+    private boolean unsubscribed = false;
+    @Override
+    void unsubscribe() {
+        unsubscribed = true
+    }
+
+    @Override
+    boolean isUnsubscribed() {
+        return unsubscribed
+    }
 }

@@ -30,7 +30,8 @@ final class Base64Tools {
         Matcher matcher = DATA_ENCODED.matcher(encoded)
         if (matcher.find() && matcher.groupCount() > 1) {
             final type = matcher.group(1)
-            log.debug("extract mime type $type from $encoded")
+            if(log.isDebugEnabled())
+                log.debug("extract mime type $type from $encoded")
             ret = matcher.group(2)
             encodedBase64 = true
         }
