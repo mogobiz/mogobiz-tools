@@ -66,7 +66,8 @@ class FileTools {
                 ds?.close()
             }
         }
-        log.debug("found ${files?.size() ?: 0} file(s) matching $glob within $folder")
+        if(log.isDebugEnabled())
+            log.debug("found ${files?.size() ?: 0} file(s) matching $glob within $folder")
         return files
     }
 
