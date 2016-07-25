@@ -86,7 +86,7 @@ final class Reader {
                     file.eachLine(charset, {String line, lineNumber ->
                         if(line.trim().length() > 0){
                             if(lineNumber == 1){
-                                keys = transformation(line).split(separator)
+                                keys = transformation(line).split(separator).collect {it.trim().replaceAll("^\"", "").replaceAll("\"\$", "")}
                             }
                             else if(!subscription.isUnsubscribed()){
                                 subscriber.onNext(
@@ -111,7 +111,7 @@ final class Reader {
 
 class CsvLine{
     String[] keys
-    Map fields = [:]
+    Map<String, String> fields = [:]
     int number
 }
 
