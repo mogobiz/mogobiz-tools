@@ -81,13 +81,18 @@ final class Reader {
                 try{
                     def subscription = new InnerSubscription()
                     subscriber.add(subscription)
+                    String[] keys = null
                     subscriber.onStart()
                     file.eachLine(charset, {String line, lineNumber ->
                         if(line.trim().length() > 0){
-                            if(!subscription.isUnsubscribed()){
+                            if(lineNumber == 1){
+                                keys = transformation(line).split(separator)
+                            }
+                            else if(!subscription.isUnsubscribed()){
                                 subscriber.onNext(
                                         new CsvLine(
-                                                fields: transformation(line).split(separator),
+                                                keys: keys,
+                                                fields: convertLineToMap(keys, line, separator, transformation),
                                                 number: lineNumber
                                         )
                                 )
@@ -105,7 +110,8 @@ final class Reader {
 }
 
 class CsvLine{
-    String[] fields
+    String[] keys
+    Map fields = [:]
     int number
 }
 

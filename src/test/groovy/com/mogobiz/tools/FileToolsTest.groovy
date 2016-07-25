@@ -2,9 +2,8 @@
  * Copyright (C) 2015 Mogobiz SARL. All rights reserved.
  */
 
-package com.mogobiz.utils
+package com.mogobiz.tools
 
-import com.mogobiz.tools.FileTools
 import org.apache.commons.codec.binary.Base64
 import org.apache.commons.codec.digest.DigestUtils
 import org.junit.Test

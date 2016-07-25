@@ -2,7 +2,7 @@
  * Copyright (C) 2015 Mogobiz SARL. All rights reserved.
  */
 
-package com.mogobiz.utils
+package com.mogobiz.tools
 
 import static com.mogobiz.tools.Base64Tools.*
 import static com.mogobiz.tools.ImageTools.encodeImageBase64
