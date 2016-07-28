@@ -55,11 +55,11 @@ final class Reader {
                     String[] keys = null
                     subscriber.onStart()
                     text.eachLine {String line, int count ->
-                        if(count == 0){
-                            keys = keysTransformation(line).split(separator).collect {trimAndUnDoubleQuotes(it)}
-                        }
-                        else if(line.trim().length() > 0){
-                            if(!subscription.isUnsubscribed()) {
+                        if(line.trim().length() > 0){
+                            if(count == 0){
+                                keys = keysTransformation(line).split(separator).collect {trimAndUnDoubleQuotes(it)}
+                            }
+                            else if(!subscription.isUnsubscribed()) {
                                 subscriber.onNext(
                                         new CsvLine(
                                                 keys: keys,
