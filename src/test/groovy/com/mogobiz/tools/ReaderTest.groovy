@@ -1,7 +1,5 @@
-package com.mogobiz.utils
+package com.mogobiz.tools
 
-import com.mogobiz.tools.CsvLine
-import com.mogobiz.tools.Reader
 import rx.functions.Action1
 
 /**
