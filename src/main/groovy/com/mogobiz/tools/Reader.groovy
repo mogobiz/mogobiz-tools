@@ -7,7 +7,6 @@ package com.mogobiz.tools
 import groovy.util.logging.Log4j
 import rx.Subscriber
 import rx.Subscription
-import rx.subscriptions.Subscriptions
 
 /**
  *
@@ -17,16 +16,22 @@ final class Reader {
     private Reader(){}
 
     static final Closure<String> identity = {String l -> l}
-    static final Closure<String> trim = {String l -> l.trim()}
+    static final Closure<String> trim = {String l -> l?.trim()}
+    static final Closure<String> unDoubleQuotes = { String l -> l?.replaceAll("^\"", "")?.replaceAll("\"\$", "")}
+    static final Closure<String> trimAndUnDoubleQuotes = (trim >> unDoubleQuotes)
 
-    static Map<String, String> convertLineToMap(String[] keys, String line, String separator = ';', Closure<String> transformation = identity){
-        def tokens = transformation(line).split(separator)
+    static Map<String, String> convertLineToMap(
+            String[] keys,
+            String line,
+            String separator = ';',
+            Closure<String> transformation = identity){
+        String[] tokens = transformation(line).split(separator)
         def map = [:]
         if(tokens.size() == keys.size()){
             final len = tokens.size() - 1
             (0..len).each {i ->
-                final k = keys[i].trim().replaceAll("^\"", "").replaceAll("\"\$", "")
-                final v = tokens[i].trim().replaceAll("^\"", "").replaceAll("\"\$", "")
+                final k = keys[i]
+                final v = trimAndUnDoubleQuotes.call(tokens[i])
                 map[k] = v.length() > 0 ? v : null
             }
         }
@@ -36,26 +41,46 @@ final class Reader {
         return map
     }
 
-    static rx.Observable<Map> parseText(
+    static rx.Observable<CsvLine> parseText(
             final String text,
             String separator = ';',
             Closure<String> keysTransformation = identity,
-            Closure<String> tokensTransformation = identity){
-        rx.Observable.create(new rx.Observable.OnSubscribe<Map>() {
+            Closure<String> tokensTransformation = identity,
+            boolean header = true,
+            String comment = "#"){
+        rx.Observable.create(new rx.Observable.OnSubscribe<CsvLine>() {
             @Override
-            void call(Subscriber<? super Map> subscriber) {
+            void call(Subscriber<? super CsvLine> subscriber) {
                 def subscription = new InnerSubscription()
                 subscriber.add(subscription)
                 try{
                     String[] keys = null
                     subscriber.onStart()
+                    boolean firstLine = true
                     text.eachLine {String line, int count ->
-                        if(count == 0){
-                            keys = keysTransformation(line).split(separator)
-                        }
-                        else if(line.trim().length() > 0){
-                            if(!subscription.isUnsubscribed()) {
-                                subscriber.onNext(convertLineToMap(keys, line, separator, tokensTransformation))
+                        if(line.trim().length() > 0 && !line.startsWith(comment)){
+                            if(header && firstLine){
+                                keys = keysTransformation(line).split(separator).collect {trimAndUnDoubleQuotes(it)}
+                                firstLine = false
+                            }
+                            else if(!subscription.isUnsubscribed()) {
+                                if(header){
+                                    subscriber.onNext(
+                                            new CsvLine(
+                                                    keys: keys,
+                                                    fields: convertLineToMap(keys, line, separator, tokensTransformation),
+                                                    number: count+1
+                                            )
+                                    )
+                                }
+                                else{
+                                    subscriber.onNext(
+                                            new CsvLine(
+                                                    values: tokensTransformation(line).split(separator),
+                                                    number: count+1
+                                            )
+                                    )
+                                }
                             }
                         }
                     }
@@ -70,27 +95,58 @@ final class Reader {
         })
     }
 
-    static rx.Observable<CsvLine> parseCsvFile(final String filename, final String charset = 'UTF-8', final String separator = ';', Closure<String> transformation = identity){
-        parseCsvFile(new File(filename), charset, separator, transformation)
+    static rx.Observable<CsvLine> parseCsvFile(
+            final String filename,
+            final String charset = 'UTF-8',
+            final String separator = ';',
+            Closure<String> keysTransformation = identity,
+            Closure<String> tokensTransformation = identity,
+            boolean header = true,
+            String comment = "#"){
+        parseCsvFile(new File(filename), charset, separator, keysTransformation, tokensTransformation, header, comment)
     }
 
-    static rx.Observable<CsvLine> parseCsvFile(final File file, final String charset = 'UTF-8', final String separator = ';', Closure<String> transformation = identity){
+    static rx.Observable<CsvLine> parseCsvFile(
+            final File file,
+            final String charset = 'UTF-8',
+            final String separator = ';',
+            Closure<String> keysTransformation = identity,
+            Closure<String> tokensTransformation = identity,
+            boolean header = true,
+            String comment = "#"){
         rx.Observable.create(new rx.Observable.OnSubscribe<CsvLine>() {
             @Override
             void call(Subscriber<? super CsvLine> subscriber) {
                 try{
                     def subscription = new InnerSubscription()
                     subscriber.add(subscription)
+                    String[] keys = null
                     subscriber.onStart()
+                    boolean firstLine = true
                     file.eachLine(charset, {String line, lineNumber ->
-                        if(line.trim().length() > 0){
-                            if(!subscription.isUnsubscribed()){
-                                subscriber.onNext(
-                                        new CsvLine(
-                                                fields: transformation(line).split(separator),
-                                                number: lineNumber
-                                        )
-                                )
+                        if(line.trim().length() > 0 && !line.startsWith(comment)){
+                            if(header && firstLine){
+                                keys = keysTransformation(line).split(separator).collect {trimAndUnDoubleQuotes(it)}
+                                firstLine = false
+                            }
+                            else if(!subscription.isUnsubscribed()){
+                                if(header){
+                                    subscriber.onNext(
+                                            new CsvLine(
+                                                    keys: keys,
+                                                    fields: convertLineToMap(keys, line, separator, tokensTransformation),
+                                                    number: lineNumber
+                                            )
+                                    )
+                                }
+                                else{
+                                    subscriber.onNext(
+                                            new CsvLine(
+                                                    values: tokensTransformation(line).split(separator),
+                                                    number: lineNumber
+                                            )
+                                    )
+                                }
                             }
                         }
                     })
@@ -105,7 +161,9 @@ final class Reader {
 }
 
 class CsvLine{
-    String[] fields
+    String[] keys = []
+    String[] values = []
+    Map<String, String> fields = [:]
     int number
 }
 
